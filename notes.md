@@ -1,6 +1,7 @@
-## [ReNet: A Recurrent Neural Network Based Alternative to Convolutional Networks](http://arxiv.org/abs/1505.00393)
+## [Beating Kaggle the easy way](http://www.ke.tu-darmstadt.de/lehre/arbeiten/studien/2015/Dong_Ying.pdf)
 
 
 #### Key Points:
 
-- sth interesting
+- fill with mean or -1
+- draw a confusion matrix correlation matrix between feathers
