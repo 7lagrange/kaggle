@@ -29,7 +29,7 @@ def rmsle(y, y_pred):
     return error 
 
 def sub_sample(train_path='../data/train.csv',
-               test_path='../data/test.csv'
+               test_path='../data/test.csv',
                s = 1000000):
     '''function that sub sample the original dataset 
     '''
@@ -49,6 +49,18 @@ def sub_sample(train_path='../data/train.csv',
 
 
 def proc_prod(prod_path='../data/producto_tabla.csv'):
-    '''
+    '''funtion that extracts weight info to the product 
+
+
     '''
     df_prod = pd.read_csv(prod_path)
+    df_prod['brand'] = df_prod['NombreProducto'].str.split(' ').str[-2]
+    
+    weight =  df_prod['NombreProducto'].str.extract('(\d+)(g|Kg|ml|kg|G)',expand=False)
+    weight[0] = weight[0].astype('float')
+    df_prod['weight'] =  np.where(weight[1].isin(['Kg','kg']), 1000 * weight[0],weight[0])
+    
+    
+    df_prod['other'] =  df_prod['NombreProducto'].str.contains('Vai?nill')
+    df_prod.to_csv('../data/preprocessed_products.csv', index = False)
+    return df_prod
