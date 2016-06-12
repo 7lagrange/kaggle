@@ -29,18 +29,23 @@ def rmsle(y, y_pred):
     return error 
 
 def sub_sample(train_path='../data/train.csv',
-               test_path='../data/test.csv'):
+               test_path='../data/test.csv'
+               s = 1000000):
+    '''function that sub sample the original dataset 
+    '''
+
     random.seed(123456)
     n_train, n_test =  74180464, 6999251  #number of rows 
-    s = 10000 #desired sample size
+    small_train = '../small_data/train_' + str(s) + '.csv'
+    small_test = '../small_data/test_' + str(s) + '.csv'
 
     skip = sorted(random.sample(xrange(1,n_train),n_train-s))
     df = pd.read_csv(train_path, skiprows=skip)
-    df.to_csv("../small_data/train.csv",index=False)
+    df.to_csv(small_train,index=False)
 
     skip = sorted(random.sample(xrange(1,n_test),n_test-s))
     df = pd.read_csv(test_path, skiprows=skip)
-    df.to_csv("../small_data/test.csv",index=False)
+    df.to_csv(small_test,index=False)
 
 
 def proc_prod(prod_path='../data/producto_tabla.csv'):
