@@ -39,12 +39,20 @@ def sub_sample(train_path='../data/train.csv',
     small_train = '../small_data/train_' + str(s) + '.csv'
     small_test = '../small_data/test_' + str(s) + '.csv'
 
+    # random sample train data
     skip = sorted(random.sample(xrange(1,n_train),n_train-s))
     df = pd.read_csv(train_path, skiprows=skip)
+    df.columns = ['WeekNum', 'StoreID', 'ChannelID', 'RouteID', 'ClientID', 'ProductID',
+             'Sales_unit_this_week', 'Sales_revenue_this_week',
+             'Returns_unit_next_week', 'Returns_revenue_next_week', 
+             'AdjDemand']
     df.to_csv(small_train,index=False)
 
+    # random sample test data
     skip = sorted(random.sample(xrange(1,n_test),n_test-s))
     df = pd.read_csv(test_path, skiprows=skip)
+    
+    df.columns = ['id', 'WeekNum', 'StoreID', 'ChannelID', 'RouteID', 'ClientID', 'ProductID']
     df.to_csv(small_test,index=False)
 
 
@@ -53,14 +61,15 @@ def proc_prod(prod_path='../data/producto_tabla.csv'):
 
 
     '''
+
     df_prod = pd.read_csv(prod_path)
-    df_prod['brand'] = df_prod['NombreProducto'].str.split(' ').str[-2]
+    df_prod.columns = ['ProductID', 'ProductName']
+    df_prod['brand'] = df_prod['ProductName'].str.split(' ').str[-2]
     
-    weight =  df_prod['NombreProducto'].str.extract('(\d+)(g|Kg|ml|kg|G)',expand=False)
+    weight =  df_prod['ProductName'].str.extract('(\d+)(g|Kg|ml|kg|G)',expand=False)
     weight[0] = weight[0].astype('float')
     df_prod['weight'] =  np.where(weight[1].isin(['Kg','kg']), 1000 * weight[0],weight[0])
     
     
-    df_prod['other'] =  df_prod['NombreProducto'].str.contains('Vai?nill')
+    df_prod['Vanila'] =  df_prod['ProductName'].str.contains('Vai?nill')
     df_prod.to_csv('../data/preprocessed_products.csv', index = False)
-    return df_prod
